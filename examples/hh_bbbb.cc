@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
     Particle bjet4 { "bjet4", LorentzVector(-18.90508, 86.760458, -76.85704, 117.55769), -5 };
 
     auto start_time = system_clock::now();
-    std::vector<std::pair<double, double>> weights = weight.computeWeights({bjet1, bjet2, bjet3, bjet4});
+    std::vector<std::pair<double, double>> weights = weight.computeWeights({bjet0, bjet1, tau0, tau1});
     auto end_time = system_clock::now();
 
     LOG(debug) << "Result:";

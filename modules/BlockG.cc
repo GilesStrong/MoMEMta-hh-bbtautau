@@ -90,7 +90,7 @@ class BlockG: public Module {
             m_particles.push_back(get<LorentzVector>(parameters.get<InputTag>("p2")));
             m_particles.push_back(get<LorentzVector>(parameters.get<InputTag>("p3")));
             m_particles.push_back(get<LorentzVector>(parameters.get<InputTag>("p4")));
-
+            std::cout << "Hello start\n";
             if (parameters.exists("branches")) {
                 auto branches_tags = parameters.get<std::vector<InputTag>>("branches");
                 for (auto& t: branches_tags)
@@ -99,7 +99,7 @@ class BlockG: public Module {
         };
  
         virtual Status work() override {
-
+            std::cout << "Hello work\n";
             solutions->clear();
 
             if (*s12 + *s34 >= SQ(sqrt_s))
@@ -161,6 +161,7 @@ class BlockG: public Module {
                     beta_1 * beta_2 * SQ(X),
                     gen_p3_solutions
                     );
+            std::cout << gen_p3_solutions.size() <<"\n";
 
             for (const auto& p3_sol: gen_p3_solutions) {
                 
@@ -189,7 +190,7 @@ class BlockG: public Module {
                             p4_sol * (beta_2 * gamma_1 + beta_1 * gamma_2 + 2 * beta_1 * beta_2 * p4_sol)
                         ) * SQ(sqrt_s) * sin_phi_2_1 );
                 jacobian *= ( sin_theta_3 * sin_theta_4 * p1_sol * p2_sol * p3_sol * p4_sol ) / ( 16 * pow(2*M_PI, 8) );
-
+                std::cout << "Hello\n";
                 Solution s = { { gen_p1, gen_p2, gen_p3, gen_p4 }, jacobian, true };
                 solutions->push_back(s);
             }

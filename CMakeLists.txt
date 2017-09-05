@@ -299,10 +299,10 @@ if(EXAMPLES)
     set_target_properties(example_WW_fullyleptonic PROPERTIES OUTPUT_NAME
       "WW_fullyleptonic.exe")
     
-    add_executable(example_hh_bbbb "examples/hh_bbbb.cc")
-    target_link_libraries(example_hh_bbbb momemta)
-    set_target_properties(example_hh_bbbb PROPERTIES OUTPUT_NAME
-      "hh_bbbb.exe")
+    add_executable(example_hh_bbtautau "examples/hh_bbtautau.cc")
+    target_link_libraries(example_hh_bbtautau momemta)
+    set_target_properties(example_hh_bbtautau PROPERTIES OUTPUT_NAME
+      "hh_bbtautau.exe")
 
 endif()
 
