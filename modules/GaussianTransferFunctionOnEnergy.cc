@@ -175,9 +175,7 @@ class GaussianTransferFunctionOnEnergyEvaluator: public GaussianTransferFunction
 
         virtual Status work() override {
             // Compute TF value
-            std::cout << "Hello!" << "\n";
             *TF_value = ROOT::Math::normal_pdf(m_gen_input->E(), m_gen_input->E() * m_sigma, m_reco_input->E());
-            std::cout << *TF_value << "\n";
             return Status::OK;
         }
 

@@ -76,6 +76,7 @@ mdl_MH = m_card_parameters["mdl_MH"];
 mdl_MZ = m_card_parameters["mdl_MZ"]; 
 mdl_MTA = m_card_parameters["mdl_MTA"]; 
 mdl_MT = m_card_parameters["mdl_MT"]; 
+masses.MDL_MT = mdl_MT;
 mdl_MB = m_card_parameters["mdl_MB"]; mdl_MZ__exp__2 = ((mdl_MZ) * (mdl_MZ)); 
 mdl_MZ__exp__4 = ((mdl_MZ) * (mdl_MZ) * (mdl_MZ) * (mdl_MZ)); 
 mdl_sqrt__2 = sqrt(2.); 

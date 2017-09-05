@@ -97,8 +97,7 @@ std::map < std::pair < int, int > , double >
 
   // Set initial particle momenta
   momenta[0] = (double * ) (&initialMomenta.first[0]); 
-  momenta[1] = (double * ) (&initialMomenta.second[0]); 
-  std::cout << "initial momenta:" << *momenta[0] << " " << *momenta[1] << "\n";
+  momenta[1] = (double * ) (&initialMomenta.second[0]);
   // Suppose final particles are passed in the "correct" order
   std::vector<int> selectedFinalState(6 - 2); 
   for (size_t index = 0; index < (6 - 2); index++ )
@@ -180,49 +179,23 @@ std::map < std::pair < int, int > , double >
 void P1_Sigma_SMEFT_FF_2_gg_bbxtaptam::calculate_wavefunctions(const int
     perm[], const int hel[])
 {
-  std::complex<double> test[2];
-  std::cout << "Test: " << test[0] << " " << test[1] << "\n";
   // Calculate wavefunctions for all processes
   static std::complex<double> w[9][18]; 
-  std::cout << "\nBeginning wave function calculation\n";
-  std::cout << "pre-vxxxxx:" << momenta[perm[0]][0] << " " << mME[0] << " " << hel[0] << " " << *w[0] << "\n";
   // Calculate all wavefunctions
   vxxxxx(&momenta[perm[0]][0], mME[0], hel[0], -1, w[0]); 
-  std::cout << "post-vxxxxx:" << momenta[perm[0]][0] << " " << mME[0] << " " << hel[0] << " " << *w[0] << "\n";
-  std::cout << "pre-vxxxxx:" << momenta[perm[1]][0] << " " << mME[1] << " " << hel[1] << " " << *w[1] << "\n";
   vxxxxx(&momenta[perm[1]][0], mME[1], hel[1], -1, w[1]); 
-  std::cout << "post-vxxxxx:" << momenta[perm[1]][0] << " " << mME[1] << " " << hel[1] << " " << *w[1] << "\n";
-  std::cout << "pre-oxxxxx:" << momenta[perm[2]][0] << " " << mME[2] << " " << hel[2] << " " << *w[2] << "\n";
   oxxxxx(&momenta[perm[2]][0], mME[2], hel[2], +1, w[2]); 
-  std::cout << "post-oxxxxx:" << momenta[perm[2]][0] << " " << mME[2] << " " << hel[2] << " " << *w[2] << "\n";
-  std::cout << "pre-ixxxxx:" << momenta[perm[3]][0] << " " << mME[3] << " " << hel[3] << " " << *w[3] << "\n";
   ixxxxx(&momenta[perm[3]][0], mME[3], hel[3], -1, w[3]); 
-  std::cout << "post-vxxxxx:" << momenta[perm[3]][0] << " " << mME[3] << " " << hel[3] << " " << *w[3] << "\n";
-  std::cout << "pre-FFS1_3:" << *w[3] << " " << *w[2] << " " << params->GC_31 << " " << params->mdl_MH << " " << params->mdl_WH << " " << *w[4] << "\n";
   FFS1_3(w[3], w[2], params->GC_31, params->mdl_MH, params->mdl_WH, w[4]); 
-  std::cout << "post-FFS1_3:" << *w[3] << " " << *w[2] << " " << params->GC_31 << " " << params->mdl_MH << " " << params->mdl_WH << " " << *w[4] << "\n";
-  std::cout << "pre-ixxxxx:" << momenta[perm[4]][0] << " " << mME[4] << " " << hel[4] << " " << *w[5] << "\n";
   ixxxxx(&momenta[perm[4]][0], mME[4], hel[4], -1, w[5]); 
-  std::cout << "post-ixxxxx:" << momenta[perm[4]][0] << " " << mME[4] << " " << hel[4] << " " << *w[5] << "\n";
-  std::cout << "pre-oxxxxx:" << momenta[perm[5]][0] << " " << mME[5] << " " << hel[5] << " " << *w[6] << "\n";
   oxxxxx(&momenta[perm[5]][0], mME[5], hel[5], +1, w[6]);
-  std::cout << "post-oxxxxx:" << momenta[perm[5]][0] << " " << mME[5] << " " << hel[5] << " " << *w[6] << "\n";
-  std::cout << "pre-FFS1_3:" << *w[5] << " " << *w[6] << " " << params->GC_33 << " " << params->mdl_MH << " " << params->mdl_WH << " " << *w[7] << "\n";
   FFS1_3(w[5], w[6], params->GC_33, params->mdl_MH, params->mdl_WH, w[7]); 
-  std::cout << "post-FFS1_3:" << *w[5] << " " << *w[6] << " " << params->GC_33 << " " << params->mdl_MH << " " << params->mdl_WH << " " << *w[7] << "\n";
-  std::cout << "pre-vvs2_3:" << *w[0] << " " << *w[1] << " " << params->GC_25 << " " << params->mdl_MH << " " << params->mdl_WH << " " << *w[8] << "\n";
   vvs2_3(w[0], w[1], &(params->GC_25), &(params->mdl_MH), &(params->mdl_WH), w[8]); 
-  std::cout << "post-vvs2_3:" << *w[0] << " " << *w[1] << " " << params->GC_25 << " " << params->mdl_MH << " " << params->mdl_WH << " " << *w[8] << "\n";
-
+  
   // Calculate all amplitudes
   // Amplitude(s) for diagram number 0
-  std::cout << "pre-vvss2_3_0:" << *w[0] << " " << *w[1] << " " << *w[4] << " " << *w[7] << " " << params->GC_22 << " " << params->GC_34 << " " << amp[0] << "\n";
   vvss2_3_0(w[0], w[1], w[4], w[7], &(params->GC_22), &(params->GC_34), &(amp[0])); 
-  std::cout << "post-vvss2_3_0:" << *w[0] << " " << *w[1] << " " << *w[4] << " " << *w[7] << " " << params->GC_22 << " " << params->GC_34 << " " << amp[0] << "\n";
-  std::cout << "pre-SSS1_0:" << *w[4] << " " << *w[7] << " " << *w[8] << " " << params->GC_28 << " " << amp[1] << "\n";
   SSS1_0(w[4], w[7], w[8], params->GC_28, amp[1]); 
-  std::cout << "post-SSS1_0:" << *w[4] << " " << *w[7] << " " << *w[8] << " " << params->GC_28 << " " << amp[1] << "\n";
-  std::cout << "\nEnding wave function calculation\n";
 }
 double P1_Sigma_SMEFT_FF_2_gg_bbxtaptam::matrix_1_gg_hh_h_bbx_h_taptam() 
 {
