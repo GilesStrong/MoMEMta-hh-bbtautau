@@ -1,77 +1,121 @@
-/*
- *  MoMEMta: a modular implementation of the Matrix Element Method
- *  Copyright (C) 2016  Universite catholique de Louvain (UCL), Belgium
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 #include <momemta/ConfigurationReader.h>
 #include <momemta/MoMEMta.h>
 #include <momemta/Unused.h>
 
+#include <string>
+#include <iostream>
+#include <fstream>
+
 #include <TH1D.h>
+#include "TFile.h"
+#include "TH1F.h"
+#include "TBranch.h"
+#include "TTree.h"
 
 #include <chrono>
 
 using namespace std::chrono;
 using namespace momemta;
 
+void normalizeInput(LorentzVector& p4) {
+     if (p4.M() > 0)
+         return;
+ 
+     // Increase the energy until M is positive
+     while (p4.M2() < 0) {
+         double delta = p4.E() * 1e-12;
+         p4.SetE(p4.E() + delta);
+     };
+ }
+
+ void fixMass(LorentzVector& p4, double mass) {
+ 
+     double new_P = std::sqrt(p4.E() * p4.E() - mass * mass);
+     double ratio = new_P / p4.P();
+ 
+     p4.SetPxPyPzE(p4.Px() * ratio, p4.Py() * ratio, p4.Pz() * ratio, p4.E());
+ 
+     normalizeInput(p4);
+ }
+
 int main(int argc, char** argv) {
 
     UNUSED(argc);
     UNUSED(argv);
 
-    logging::set_level(logging::level::debug);
+    //logging::set_level(logging::level::debug);
 
     ConfigurationReader configuration("../examples/hh_bbtautau.lua");
 
     MoMEMta weight(configuration.freeze());
 
-   /* // bjet
-    Particle bjet0 { "bjet0", LorentzVector(-92.264977, -42.952817, -67.447789, 122.648092), 5 };
-    // anti-bjet
-    Particle bjet1 { "bjet1", LorentzVector(-2.795940, -51.372875, 20.067071, 56.199769), -5 };
-    // bjet
-    Particle tau0 { "tau0", LorentzVector(30.757134, -13.697116, -54.096689, 63.743401), -15 };
-    // anti-bjet
-    Particle tau1 { "tau1", LorentzVector(113.214732, 119.024643, -3.917881, 164.325738), 15 };*/
+    TFile *f = new TFile("/home/giles/cernbox/sample_analysis/processedData.root","update");
+    TTree *T = (TTree*)f->Get("tree");
+    Float_t b_0_px, b_0_py, b_0_pz, b_0_E;
+    Float_t b_1_px, b_1_py, b_1_pz, b_1_E;
+    Float_t reg_t_0_px, reg_t_0_py, reg_t_0_pz, reg_t_0_E;
+    Float_t reg_t_1_px, reg_t_1_py, reg_t_1_pz, reg_t_1_E;
 
-    Particle bjet0 { "bjet0", LorentzVector(84.0921554565,-56.7863349915,-444.73727417,456.191253662), 5 };
-    Particle bjet1 { "bjet1", LorentzVector(13.5419635773,-46.7071304321,-36.5659751892,61.0331993103), -5 };
-    Particle tau0 { "tau0", LorentzVector(27.4124488831,49.1357765198,-146.326705933,156.781463623), 15 };
-    Particle tau1 { "tau1", LorentzVector(-118.289733887,58.8872528076,-316.725891113,343.188873291), -15 };
-/*
-    Particle bjet0 { "bjet0", LorentzVector(15.68735, -189.8133, -210.1001, 288.65808), 5 };
-    // anti-bjet
-    Particle bjet1 { "bjet1", LorentzVector(-81.89723, -59.53946, -75.95126, 127.12102), -5 };
-    // bjet
-    Particle tau0 { "tau0", LorentzVector(84.728727, 127.45076, -243.5151, 289.04342), -15 };
-    // anti-bjet
-    Particle tau1 { "tau1", LorentzVector(-18.90508, 86.760458, -76.85704, 117.55769), 15 };*/
+    Double_t memWeight;
+    TBranch *memSigWeights = T->Branch("memSigWeights",&memWeight,"memWeight/D");
+    T->SetBranchAddress("b_0_px",&b_0_px);
+    T->SetBranchAddress("b_0_py",&b_0_py);
+    T->SetBranchAddress("b_0_pz",&b_0_pz);
+    T->SetBranchAddress("b_0_E",&b_0_E);
+    T->SetBranchAddress("b_1_px",&b_1_px);
+    T->SetBranchAddress("b_1_py",&b_1_py);
+    T->SetBranchAddress("b_1_pz",&b_1_pz);
+    T->SetBranchAddress("b_1_E",&b_1_E);
+    T->SetBranchAddress("reg_t_0_px",&reg_t_0_px);
+    T->SetBranchAddress("reg_t_0_py",&reg_t_0_py);
+    T->SetBranchAddress("reg_t_0_pz",&reg_t_0_pz);
+    T->SetBranchAddress("reg_t_0_E",&reg_t_0_E);
+    T->SetBranchAddress("reg_t_1_px",&reg_t_1_px);
+    T->SetBranchAddress("reg_t_1_py",&reg_t_1_py);
+    T->SetBranchAddress("reg_t_1_pz",&reg_t_1_pz);
+    T->SetBranchAddress("reg_t_1_E",&reg_t_1_E);
 
     auto start_time = system_clock::now();
-    std::vector<std::pair<double, double>> weights = weight.computeWeights({bjet0, bjet1, tau0, tau1});
-    auto end_time = system_clock::now();
-
-    LOG(debug) << "Result:";
-    for (const auto& r: weights) {
-        LOG(debug) << r.first << " +- " << r.second;
+    Long64_t nentries = T->GetEntries();
+    LorentzVector v_bjet0, v_bjet1, v_tau0, v_tau1;
+    for (Long64_t i=0;i<nentries;i++) {
+        if (i%100 == 0) {
+            LOG(info) <<"event: "<<i<<" of "<<nentries<<" ("<<(Double_t)(nentries-i)/(Double_t)nentries*100.0<<"% to go)";
+            LOG(info) << "Latest weight: " << memWeight;
+        }
+        T->GetEntry(i);
+        v_bjet0 = LorentzVector(b_0_px, b_0_py, b_0_pz, b_0_E);
+        v_bjet1 = LorentzVector(b_1_px, b_1_py, b_1_pz, b_1_E);
+        v_tau0 = LorentzVector(reg_t_0_px, reg_t_0_py, reg_t_0_pz, reg_t_0_E);
+        v_tau1 = LorentzVector(reg_t_1_px, reg_t_1_py, reg_t_1_pz, reg_t_1_E);
+        memWeight = -1;
+        fixMass(v_bjet0, 0);
+        fixMass(v_bjet1, 0);
+        fixMass(v_tau0, 0);
+        fixMass(v_tau1, 0);
+        if ((v_bjet0.M() >= 0) & (v_bjet1.M() >= 0) & (v_tau0.M() >= 0) & (v_tau1.M() >= 0)) {
+            if  ((v_bjet0.P() >= 0) & (v_bjet1.P() >= 0) & (v_tau0.P() >= 0) & (v_tau1.P() >= 0)) {
+                Particle bjet0{"bjet0", v_bjet0, 5};
+                Particle bjet1{"bjet1", v_bjet1, -5};
+                Particle tau0{"tau0", v_tau0, -15};
+                Particle tau1{"tau1", v_tau1, 15};
+                std::vector<std::pair<long double, long double>> weights = weight.computeWeights({bjet0, bjet1, tau0, tau1});
+                memWeight = weights[0].first;
+                if (weights.size() > 1) std::cout << "Number of solutions: " << weights.size() << "\n";
+            } else {
+                std::cout << "Unphysical event due to momentum: " << v_bjet0.P() << " " << v_bjet1.P() << " " << v_tau0.P() << " " << v_tau1.P() << "\n";
+                break;
+            }
+        } else {
+                std::cout << "Unphysical event due to mass: " << v_bjet0.M() << " " << v_bjet1.M() << " " << v_tau0.M() << " " << v_tau1.M() << "\n";
+                break;
+        }
+        memSigWeights->Fill();
     }
+    auto end_time = system_clock::now();
+    LOG(info) << "Weights computed in " << std::chrono::duration_cast<milliseconds>(end_time - start_time).count() << "ms";
 
-    LOG(info) << "Weight computed in " << std::chrono::duration_cast<milliseconds>(end_time - start_time).count() << "ms";
-
-
+    T->Write();
+    delete f;
     return 0;
 }

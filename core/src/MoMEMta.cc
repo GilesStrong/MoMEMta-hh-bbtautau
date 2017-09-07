@@ -137,7 +137,7 @@ const Pool& MoMEMta::getPool() const {
     return *m_pool;
 }
 
-std::vector<std::pair<double, double>> MoMEMta::computeWeights(const std::vector<momemta::Particle>& particles, const LorentzVector& met) {
+std::vector<std::pair<long double, long double>> MoMEMta::computeWeights(const std::vector<momemta::Particle>& particles, const LorentzVector& met) {
 
     if (particles.size() != m_inputs_p4.size()) {
         auto exception = invalid_inputs("Some inputs are missing. " + std::to_string(m_inputs_p4.size()) + " expected, "
@@ -388,11 +388,11 @@ std::vector<std::pair<double, double>> MoMEMta::computeWeights(const std::vector
         module->endIntegration();
     }
 
-    std::vector<std::pair<double, double>> result;
+    //return mcResult
+    std::vector<std::pair<long double, long double>> result;
     for (size_t i = 0; i < m_n_components; i++) {
         result.push_back( std::make_pair(mcResult[i], error[i]) );
     }
-
     return result;
 }
 

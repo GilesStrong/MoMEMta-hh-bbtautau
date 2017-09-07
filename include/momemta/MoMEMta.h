@@ -73,7 +73,7 @@ class MoMEMta {
          *
          * \return A vector of weights. Each weight is represented by a pair of double, the first element being the value of the weight and the second the associated absolute error.
          */
-        std::vector<std::pair<double, double>> computeWeights(const std::vector<momemta::Particle>& particles,
+        std::vector<std::pair<long double, long double>> computeWeights(const std::vector<momemta::Particle>& particles,
                                                               const LorentzVector& met = LorentzVector());
 
         /** \brief Return the status of the integration

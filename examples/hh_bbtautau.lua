@@ -54,7 +54,9 @@ BlockG.blockg = {
 
 Looper.looper = {
     solutions = "blockg::solutions",
-    path = Path("tf_p1", "tf_p2", "tf_p3", "tf_p4", "initial_state", "hh", "integrand")
+    -- path = Path("tf_p1", "tf_p2", "tf_p3", "tf_p4", "initial_state", "hh", "integrand")
+    path = Path("tf_p1", "tf_p2", "initial_state", "hh", "integrand")
+
 }
 
 inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particles/3', 'looper::particles/4'}
@@ -71,21 +73,23 @@ inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particle
         gen_particle = inputs_looper[2]
     }
 
-    GaussianTransferFunctionOnEnergyEvaluator.tf_p3 = {
-        reco_particle = inputs[3],
-        gen_particle = inputs_looper[3]
-    }
+    -- GaussianTransferFunctionOnEnergyEvaluator.tf_p3 = {
+    --     reco_particle = inputs[3],
+    --     gen_particle = inputs_looper[3]
+    -- }
 
-    GaussianTransferFunctionOnEnergyEvaluator.tf_p4 = {
-        reco_particle = inputs[4],
-        gen_particle = inputs_looper[4]
-    }
+    -- GaussianTransferFunctionOnEnergyEvaluator.tf_p4 = {
+    --     reco_particle = inputs[4],
+    --     gen_particle = inputs_looper[4]
+    -- }
 
     BuildInitialState.initial_state = {
         particles = inputs_looper
     }
 
-    jacobians = {'nwa_s12::jacobian', 'nwa_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
+    -- jacobians = {'nwa_s12::jacobian', 'nwa_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
+    jacobians = {'nwa_s12::jacobian', 'nwa_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'looper::jacobian'}
+
 --    jacobians = {'flatter_s12::jacobian', 'flatter_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
 
     MatrixElement.hh = {

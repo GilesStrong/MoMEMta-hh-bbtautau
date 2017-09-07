@@ -253,7 +253,7 @@ class MatrixElement: public Module {
                                                                                toVector(partons[1]) };
 
             auto result = m_ME->compute(initialState, finalState);
-
+            
             double x1 = std::abs(partons[0].Pz() / (sqrt_s / 2.));
             double x2 = std::abs(partons[1].Pz() / (sqrt_s / 2.));
 
