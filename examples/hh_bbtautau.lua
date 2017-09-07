@@ -15,15 +15,15 @@ cuba = {
     verbosity = 3
 }
 
-NarrowWidthApproximation.nwa_s12 = {
-    mass = parameter('H_mass'),
-    width = parameter('H_width')
-}
+-- NarrowWidthApproximation.nwa_s12 = {
+--     mass = parameter('H_mass'),
+--     width = parameter('H_width')
+-- }
 
-NarrowWidthApproximation.nwa_s34 = {
-    mass = parameter('H_mass'),
-    width = parameter('H_width')
-}
+-- NarrowWidthApproximation.nwa_s34 = {
+--     mass = parameter('H_mass'),
+--     width = parameter('H_width')
+-- }
 
 --BreitWignerGenerator.flatter_s12 = {
 --    ps_point = add_dimension(),
@@ -39,39 +39,39 @@ NarrowWidthApproximation.nwa_s34 = {
 
 inputs = {bjet0.reco_p4, bjet1.reco_p4, tau0.reco_p4, tau1.reco_p4}
 
-BlockG.blockg = {
-    p1 = inputs[1],
-    p2 = inputs[2],
-    p3 = inputs[3],
-    p4 = inputs[4],
+-- BlockG.blockg = {
+--     p1 = inputs[1],
+--     p2 = inputs[2],
+--     p3 = inputs[3],
+--     p4 = inputs[4],
 
---    s12 = 'flatter_s12::s',
---    s34 = 'flatter_s34::s',
+-- --    s12 = 'flatter_s12::s',
+-- --    s34 = 'flatter_s34::s',
 
-    s12 = 'nwa_s12::s',
-    s34 = 'nwa_s34::s',
-}
+--     s12 = 'nwa_s12::s',
+--     s34 = 'nwa_s34::s',
+-- }
 
-Looper.looper = {
-    solutions = "blockg::solutions",
-    -- path = Path("tf_p1", "tf_p2", "tf_p3", "tf_p4", "initial_state", "hh", "integrand")
-    path = Path("tf_p1", "tf_p2", "initial_state", "hh", "integrand")
+-- Looper.looper = {
+--     -- solutions = "blockg::solutions",
+--     -- path = Path("tf_p1", "tf_p2", "tf_p3", "tf_p4", "initial_state", "hh", "integrand")
+--     path = Path("initial_state", "hh", "integrand")
 
-}
+-- }
 
-inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particles/3', 'looper::particles/4'}
+-- inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particles/3', 'looper::particles/4'}
 
 -- Loop
 
-    GaussianTransferFunctionOnEnergyEvaluator.tf_p1 = {
-        reco_particle = inputs[1],
-        gen_particle = inputs_looper[1]
-    }
+    -- GaussianTransferFunctionOnEnergyEvaluator.tf_p1 = {
+    --     reco_particle = inputs[1],
+    --     gen_particle = inputs_looper[1]
+    -- }
 
-    GaussianTransferFunctionOnEnergyEvaluator.tf_p2 = {
-        reco_particle = inputs[2],
-        gen_particle = inputs_looper[2]
-    }
+    -- GaussianTransferFunctionOnEnergyEvaluator.tf_p2 = {
+    --     reco_particle = inputs[2],
+    --     gen_particle = inputs_looper[2]
+    -- }
 
     -- GaussianTransferFunctionOnEnergyEvaluator.tf_p3 = {
     --     reco_particle = inputs[3],
@@ -84,13 +84,14 @@ inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particle
     -- }
 
     BuildInitialState.initial_state = {
-        particles = inputs_looper
+        particles = inputs
+        -- particles = inputs_looper
     }
 
     -- jacobians = {'nwa_s12::jacobian', 'nwa_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
-    jacobians = {'nwa_s12::jacobian', 'nwa_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'looper::jacobian'}
+    -- jacobians = {'looper::jacobian'}
 
---    jacobians = {'flatter_s12::jacobian', 'flatter_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
+    --    jacobians = {'flatter_s12::jacobian', 'flatter_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
 
     MatrixElement.hh = {
         pdf = 'CT10nlo',
@@ -104,7 +105,7 @@ inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particle
         initialState = 'initial_state::partons',
 
         particles = {
-          inputs = inputs_looper,
+          inputs = inputs,
           ids = {
             {
               pdg_id = 5,
@@ -125,13 +126,14 @@ inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particle
           }
         },
 
-        jacobians = jacobians
+        -- jacobians = jacobians
     }
 
-    DoubleLooperSummer.integrand = {
-        input = "hh::output"
-    }
+    -- DoubleLooperSummer.integrand = {
+    --     input = "hh::output"
+    -- }
 
 -- End of loop
 
-integrand("integrand::sum")
+-- integrand("integrand::sum")
+    integrand("hh::output")

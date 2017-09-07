@@ -51,21 +51,21 @@ int main(int argc, char** argv) {
 
     TFile *f = new TFile("/home/giles/cernbox/sample_analysis/processedData.root","update");
     TTree *T = (TTree*)f->Get("tree");
-    Float_t b_0_px, b_0_py, b_0_pz, b_0_E;
-    Float_t b_1_px, b_1_py, b_1_pz, b_1_E;
+    Float_t reg_b_0_px, reg_b_0_py, reg_b_0_pz, reg_b_0_E;
+    Float_t reg_b_1_px, reg_b_1_py, reg_b_1_pz, reg_b_1_E;
     Float_t reg_t_0_px, reg_t_0_py, reg_t_0_pz, reg_t_0_E;
     Float_t reg_t_1_px, reg_t_1_py, reg_t_1_pz, reg_t_1_E;
 
     Double_t memWeight;
     TBranch *memSigWeights = T->Branch("memSigWeights",&memWeight,"memWeight/D");
-    T->SetBranchAddress("b_0_px",&b_0_px);
-    T->SetBranchAddress("b_0_py",&b_0_py);
-    T->SetBranchAddress("b_0_pz",&b_0_pz);
-    T->SetBranchAddress("b_0_E",&b_0_E);
-    T->SetBranchAddress("b_1_px",&b_1_px);
-    T->SetBranchAddress("b_1_py",&b_1_py);
-    T->SetBranchAddress("b_1_pz",&b_1_pz);
-    T->SetBranchAddress("b_1_E",&b_1_E);
+    T->SetBranchAddress("reg_b_0_px",&reg_b_0_px);
+    T->SetBranchAddress("reg_b_0_py",&reg_b_0_py);
+    T->SetBranchAddress("reg_b_0_pz",&reg_b_0_pz);
+    T->SetBranchAddress("reg_b_0_E",&reg_b_0_E);
+    T->SetBranchAddress("reg_b_1_px",&reg_b_1_px);
+    T->SetBranchAddress("reg_b_1_py",&reg_b_1_py);
+    T->SetBranchAddress("reg_b_1_pz",&reg_b_1_pz);
+    T->SetBranchAddress("reg_b_1_E",&reg_b_1_E);
     T->SetBranchAddress("reg_t_0_px",&reg_t_0_px);
     T->SetBranchAddress("reg_t_0_py",&reg_t_0_py);
     T->SetBranchAddress("reg_t_0_pz",&reg_t_0_pz);
@@ -84,8 +84,8 @@ int main(int argc, char** argv) {
             LOG(info) << "Latest weight: " << memWeight;
         }
         T->GetEntry(i);
-        v_bjet0 = LorentzVector(b_0_px, b_0_py, b_0_pz, b_0_E);
-        v_bjet1 = LorentzVector(b_1_px, b_1_py, b_1_pz, b_1_E);
+        v_bjet0 = LorentzVector(reg_b_0_px, reg_b_0_py, reg_b_0_pz, reg_b_0_E);
+        v_bjet1 = LorentzVector(reg_b_1_px, reg_b_1_py, reg_b_1_pz, reg_b_1_E);
         v_tau0 = LorentzVector(reg_t_0_px, reg_t_0_py, reg_t_0_pz, reg_t_0_E);
         v_tau1 = LorentzVector(reg_t_1_px, reg_t_1_py, reg_t_1_pz, reg_t_1_E);
         memWeight = -1;
@@ -102,6 +102,10 @@ int main(int argc, char** argv) {
                 std::vector<std::pair<long double, long double>> weights = weight.computeWeights({bjet0, bjet1, tau0, tau1});
                 memWeight = weights[0].first;
                 if (weights.size() > 1) std::cout << "Number of solutions: " << weights.size() << "\n";
+/*                if (memWeight != memWeight) {
+                    LOG(info) << "NaN found: " << memWeight;
+                    break;
+                }*/
             } else {
                 std::cout << "Unphysical event due to momentum: " << v_bjet0.P() << " " << v_bjet1.P() << " " << v_tau0.P() << " " << v_tau1.P() << "\n";
                 break;

@@ -259,19 +259,22 @@ class MatrixElement: public Module {
 
             // Compute flux factor 1/(2*x1*x2*s)
             double phaseSpaceIn = 1. / (2. * x1 * x2 * SQ(sqrt_s));
+            //std::cout << "Phasespace: " << phaseSpaceIn << "\n";
             double integrand = phaseSpaceIn;
             for (const auto& jacobian: m_jacobians) {
                 integrand *= (*jacobian);
             }
+            //std::cout << "Integrand: " << integrand << "\n";
             // PDF
             double final_integrand = 0;
             for (const auto& me: result) {
                 double pdf1 = use_pdf ? m_pdf->xfxQ2(me.first.first, x1, pdf_scale_squared) / x1 : 1;
                 double pdf2 = use_pdf ? m_pdf->xfxQ2(me.first.second, x2, pdf_scale_squared) / x2 : 1;
                 final_integrand += me.second * pdf1 * pdf2;
+                //std::cout << "ME.second: " << me.second << "\n";
             }
-
             final_integrand *= integrand;
+            //std::cout << "Final integrand: " << final_integrand << "\n";
             *m_integrand = final_integrand;
 
             return Status::OK;

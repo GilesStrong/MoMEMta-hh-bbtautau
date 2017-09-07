@@ -137,6 +137,7 @@ std::map < std::pair < int, int > , double >
         double meTemp = me.callback( * this); 
         sum += meTemp; 
         me_sum += meTemp/me.denominator; 
+        //std::cout << "me_sum, meTemp, me.denominator: " << me_sum << " " << meTemp << " " << me.denominator << "\n";
 
         if(me.hasMirrorProcess)
         {
