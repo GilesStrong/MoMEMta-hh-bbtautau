@@ -77,8 +77,10 @@ int main(int argc, char** argv) {
     T->SetBranchAddress("regTau_t_1_E",&regTau_t_1_E);
 
     auto start_time = system_clock::now();
-    Long64_t nentries = T->GetEntries();
+    Long64_t nentries = 10;//T->GetEntries();
     LorentzVector v_bjet0, v_bjet1, v_tau0, v_tau1;
+    std::vector<std::vector<double> > outputs;
+    std::vector<double> buffer(3);
     for (Long64_t i=0;i<nentries;i++) {
         if (i%100 == 0) {
             LOG(info) <<"event: "<<i<<" of "<<nentries<<" ("<<(Double_t)(nentries-i)/(Double_t)nentries*100.0<<"% to go)";
@@ -102,6 +104,10 @@ int main(int argc, char** argv) {
                 Particle tau1{"tau1", v_tau1, 15};
                 std::vector<std::pair<long double, long double>> weights = weight.computeWeights({bjet0, bjet1, tau0, tau1});
                 memWeight = weights[0].first;
+                buffer[0] = i;
+                buffer[1] = weights[0].first;
+                buffer[2] = weights[1].first;
+                outputs.push_back(buffer);
                 if (weights.size() > 1) std::cout << "Number of solutions: " << weights.size() << "\n";
 /*                if (memWeight != memWeight) {
                     LOG(info) << "NaN found: " << memWeight;
@@ -120,6 +126,13 @@ int main(int argc, char** argv) {
     auto end_time = system_clock::now();
     LOG(info) << "Weights computed in " << std::chrono::duration_cast<milliseconds>(end_time - start_time).count() << "ms";
     T->Write();
+    std::ofstream outFile;
+    outFile.open ("test.csv");
+    outFile << ",memSigWeight, memSigWeight_Error\n";
+    for (int i = 0; i < outputs.size(); ++i) {
+        outFile << outputs[i][0] << "," << outputs[i][1] << "," << outputs[i][2] << "\n";
+    }
+    outFile.close();
     delete f;
     return 0;
 }
