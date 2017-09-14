@@ -49,31 +49,32 @@ int main(int argc, char** argv) {
 
     MoMEMta weight(configuration.freeze());
 
-    TFile *f = new TFile("/home/giles/cernbox/sample_analysis/processedData.root","update");
+    TFile *f = new TFile("/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData.root","update");
+    //TFile *f = new TFile("/home/giles/cernbox/sample_analysis/processedData.root","update");
     TTree *T = (TTree*)f->Get("tree");
-    Float_t reg_b_0_px, reg_b_0_py, reg_b_0_pz, reg_b_0_E;
-    Float_t reg_b_1_px, reg_b_1_py, reg_b_1_pz, reg_b_1_E;
-    Float_t reg_t_0_px, reg_t_0_py, reg_t_0_pz, reg_t_0_E;
-    Float_t reg_t_1_px, reg_t_1_py, reg_t_1_pz, reg_t_1_E;
+    Double_t regB_b_0_px, regB_b_0_py, regB_b_0_pz, regB_b_0_E;
+    Double_t regB_b_1_px, regB_b_1_py, regB_b_1_pz, regB_b_1_E;
+    Double_t regTau_t_0_px, regTau_t_0_py, regTau_t_0_pz, regTau_t_0_E;
+    Double_t regTau_t_1_px, regTau_t_1_py, regTau_t_1_pz, regTau_t_1_E;
 
     Double_t memWeight;
     TBranch *memSigWeights = T->Branch("memSigWeights",&memWeight,"memWeight/D");
-    T->SetBranchAddress("reg_b_0_px",&reg_b_0_px);
-    T->SetBranchAddress("reg_b_0_py",&reg_b_0_py);
-    T->SetBranchAddress("reg_b_0_pz",&reg_b_0_pz);
-    T->SetBranchAddress("reg_b_0_E",&reg_b_0_E);
-    T->SetBranchAddress("reg_b_1_px",&reg_b_1_px);
-    T->SetBranchAddress("reg_b_1_py",&reg_b_1_py);
-    T->SetBranchAddress("reg_b_1_pz",&reg_b_1_pz);
-    T->SetBranchAddress("reg_b_1_E",&reg_b_1_E);
-    T->SetBranchAddress("reg_t_0_px",&reg_t_0_px);
-    T->SetBranchAddress("reg_t_0_py",&reg_t_0_py);
-    T->SetBranchAddress("reg_t_0_pz",&reg_t_0_pz);
-    T->SetBranchAddress("reg_t_0_E",&reg_t_0_E);
-    T->SetBranchAddress("reg_t_1_px",&reg_t_1_px);
-    T->SetBranchAddress("reg_t_1_py",&reg_t_1_py);
-    T->SetBranchAddress("reg_t_1_pz",&reg_t_1_pz);
-    T->SetBranchAddress("reg_t_1_E",&reg_t_1_E);
+    T->SetBranchAddress("regB_b_0_px",&regB_b_0_px);
+    T->SetBranchAddress("regB_b_0_py",&regB_b_0_py);
+    T->SetBranchAddress("regB_b_0_pz",&regB_b_0_pz);
+    T->SetBranchAddress("regB_b_0_E",&regB_b_0_E);
+    T->SetBranchAddress("regB_b_1_px",&regB_b_1_px);
+    T->SetBranchAddress("regB_b_1_py",&regB_b_1_py);
+    T->SetBranchAddress("regB_b_1_pz",&regB_b_1_pz);
+    T->SetBranchAddress("regB_b_1_E",&regB_b_1_E);
+    T->SetBranchAddress("regTau_t_0_px",&regTau_t_0_px);
+    T->SetBranchAddress("regTau_t_0_py",&regTau_t_0_py);
+    T->SetBranchAddress("regTau_t_0_pz",&regTau_t_0_pz);
+    T->SetBranchAddress("regTau_t_0_E",&regTau_t_0_E);
+    T->SetBranchAddress("regTau_t_1_px",&regTau_t_1_px);
+    T->SetBranchAddress("regTau_t_1_py",&regTau_t_1_py);
+    T->SetBranchAddress("regTau_t_1_pz",&regTau_t_1_pz);
+    T->SetBranchAddress("regTau_t_1_E",&regTau_t_1_E);
 
     auto start_time = system_clock::now();
     Long64_t nentries = T->GetEntries();
@@ -84,10 +85,10 @@ int main(int argc, char** argv) {
             LOG(info) << "Latest weight: " << memWeight;
         }
         T->GetEntry(i);
-        v_bjet0 = LorentzVector(reg_b_0_px, reg_b_0_py, reg_b_0_pz, reg_b_0_E);
-        v_bjet1 = LorentzVector(reg_b_1_px, reg_b_1_py, reg_b_1_pz, reg_b_1_E);
-        v_tau0 = LorentzVector(reg_t_0_px, reg_t_0_py, reg_t_0_pz, reg_t_0_E);
-        v_tau1 = LorentzVector(reg_t_1_px, reg_t_1_py, reg_t_1_pz, reg_t_1_E);
+        v_bjet0 = LorentzVector(regB_b_0_px, regB_b_0_py, regB_b_0_pz, regB_b_0_E);
+        v_bjet1 = LorentzVector(regB_b_1_px, regB_b_1_py, regB_b_1_pz, regB_b_1_E);
+        v_tau0 = LorentzVector(regTau_t_0_px, regTau_t_0_py, regTau_t_0_pz, regTau_t_0_E);
+        v_tau1 = LorentzVector(regTau_t_1_px, regTau_t_1_py, regTau_t_1_pz, regTau_t_1_E);
         memWeight = -1;
         fixMass(v_bjet0, 0);
         fixMass(v_bjet1, 0);
@@ -118,7 +119,6 @@ int main(int argc, char** argv) {
     }
     auto end_time = system_clock::now();
     LOG(info) << "Weights computed in " << std::chrono::duration_cast<milliseconds>(end_time - start_time).count() << "ms";
-
     T->Write();
     delete f;
     return 0;

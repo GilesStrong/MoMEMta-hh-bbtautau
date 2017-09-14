@@ -1,0 +1,8 @@
+import model sm
+define ts = t t~
+define bs = b b~
+define ws = w+ w-
+define taus = ta+ ta-
+define nus = vt vt~  vm vm~
+define mus = mu+ mu-
+generate p p > ts ts, (ts > ws bs, (ws > tas nus)), (ts > ws bs, (ws > mus nus))

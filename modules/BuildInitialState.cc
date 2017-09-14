@@ -94,7 +94,7 @@ class BuildInitialState: public Module {
             }
 
             do_compute_initials(particles);
-
+            //std::cout << "E 0: " << (*partons)[0].E() << " E 1: " << (*partons)[1].E() << "\n"; 
             // Check if solutions are physical
             if ((*partons)[0].E() > halved_sqrt_s || (*partons)[1].E() > halved_sqrt_s )
                 return Status::NEXT;

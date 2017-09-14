@@ -119,16 +119,16 @@ std::map < std::pair < int, int > , double >
   {
     perm[i] = i; 
   }
-
+  //std::cout << "Here0\n";
   for(auto &me: mapFinalStates[selectedFinalState])
   {
-
+    //std::cout << "Here1\n";
     double me_sum = 0; 
     double me_mirror_sum = 0; 
-
+    //std::cout << "Here2n";
     for(int ihel = 0; ihel < 64; ihel++ )
     {
-
+      //std::cout << "Here3\n";
       if(me.goodHel[ihel])
       {
 

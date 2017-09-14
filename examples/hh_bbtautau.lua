@@ -39,6 +39,9 @@ cuba = {
 
 inputs = {bjet0.reco_p4, bjet1.reco_p4, tau0.reco_p4, tau1.reco_p4}
 
+StandardPhaseSpace.phaseSpaceOut = {
+    particles = inputs
+}
 -- BlockG.blockg = {
 --     p1 = inputs[1],
 --     p2 = inputs[2],
@@ -53,7 +56,7 @@ inputs = {bjet0.reco_p4, bjet1.reco_p4, tau0.reco_p4, tau1.reco_p4}
 -- }
 
 -- Looper.looper = {
---     -- solutions = "blockg::solutions",
+--     solutions = "blockg::solutions",
 --     -- path = Path("tf_p1", "tf_p2", "tf_p3", "tf_p4", "initial_state", "hh", "integrand")
 --     path = Path("initial_state", "hh", "integrand")
 
@@ -62,6 +65,20 @@ inputs = {bjet0.reco_p4, bjet1.reco_p4, tau0.reco_p4, tau1.reco_p4}
 -- inputs_looper = {'looper::particles/1', 'looper::particles/2', 'looper::particles/3', 'looper::particles/4'}
 
 -- Loop
+
+    -- BinnedTransferFunctionOnEnergyEvaluator.tf_p1 = {
+    --     reco_particle = inputs[1],
+    --     gen_particle = inputs_looper[1],
+    --     file = '/home/giles/cernbox/sample_analysis/bJetRes.root',
+    --     th2_name = 'Resolution',
+    -- }
+
+    -- BinnedTransferFunctionOnEnergyEvaluator.tf_p2 = {
+    --     reco_particle = inputs[2],
+    --     gen_particle = inputs_looper[2],
+    --     file = '/home/giles/cernbox/sample_analysis/bJetRes.root',
+    --     th2_name = 'Resolution',
+    -- }
 
     -- GaussianTransferFunctionOnEnergyEvaluator.tf_p1 = {
     --     reco_particle = inputs[1],
@@ -88,10 +105,7 @@ inputs = {bjet0.reco_p4, bjet1.reco_p4, tau0.reco_p4, tau1.reco_p4}
         -- particles = inputs_looper
     }
 
-    -- jacobians = {'nwa_s12::jacobian', 'nwa_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
-    -- jacobians = {'looper::jacobian'}
-
-    --    jacobians = {'flatter_s12::jacobian', 'flatter_s34::jacobian',  'tf_p1::TF', 'tf_p2::TF', 'tf_p3::TF', 'tf_p4::TF', 'looper::jacobian'}
+    -- jacobians = {'nwa_s12::jacobian', 'nwa_s34::jacobian', 'looper::jacobian'}
 
     MatrixElement.hh = {
         pdf = 'CT10nlo',
@@ -126,7 +140,7 @@ inputs = {bjet0.reco_p4, bjet1.reco_p4, tau0.reco_p4, tau1.reco_p4}
           }
         },
 
-        -- jacobians = jacobians
+        jacobians = {'phaseSpaceOut::phase_space'}-- jacobians = jacobians
     }
 
     -- DoubleLooperSummer.integrand = {
@@ -136,4 +150,4 @@ inputs = {bjet0.reco_p4, bjet1.reco_p4, tau0.reco_p4, tau1.reco_p4}
 -- End of loop
 
 -- integrand("integrand::sum")
-    integrand("hh::output")
+integrand("hh::output")
