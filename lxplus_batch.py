@@ -44,4 +44,4 @@ if __name__ == "__main__":
     print "between event numbers " + str(first) + " and " + str(first+nEvents) + " of file " + inputFile
     if raw_input("Continue? [y/n]: ").lower().strip() == "y":
         for i in runNumbers:
-            makeJOFile(i, split, inputFile, queue)
+            makeJOFile(i, i+split, inputFile, queue)

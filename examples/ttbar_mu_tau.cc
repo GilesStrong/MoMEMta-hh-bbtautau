@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 
     MoMEMta weight(configuration.freeze());
 
-    TFile *f = new TFile((options["-i"] + ".root").c_str(), "update");
+    TFile *f = new TFile((options["-i"] + ".root").c_str());
     TTree *T = (TTree*)f->Get("tree");
     Double_t b_0_px, b_0_py, b_0_pz, b_0_E;
     Double_t b_1_px, b_1_py, b_1_pz, b_1_E;
