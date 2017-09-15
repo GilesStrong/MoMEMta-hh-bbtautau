@@ -14,7 +14,7 @@ def makeJOFile(start, stop, inputFile, queue):
     joName = name + "_" + str(start) + ".job"
     joFile = open(joName, "w")
     joFile.write("echo Beginning\ job\n")
-    joFile.write(". " + setup + "\n")
+    joFile.write("source " + setup + "\n")
     joFile.write("echo Paths\ set\n")
     joFile.write("cd " + installPrefix + "\n")
     joFile.write("./ttbar_mu_tau.exe -i " + inputFile + " -s " + str(start) + " -e " + str(stop))
