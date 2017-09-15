@@ -51,7 +51,7 @@ void normalizeInput(LorentzVector& p4) {
  std::map<std::string, std::string> getOptions(int argc, char* argv[]) {
     /*Interpret input arguments*/
     std::map<std::string, std::string> options;
-    options.insert(std::make_pair("-i", "/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData.root")); //Input name
+    options.insert(std::make_pair("-i", "/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData")); //Input name
     options.insert(std::make_pair("-d", "0")); //Debug mode
     options.insert(std::make_pair("-s", "0")); //Start number
     options.insert(std::make_pair("-e", "-1")); //End number
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 
     MoMEMta weight(configuration.freeze());
 
-    TFile *f = new TFile(options["-i"].c_str(),"update");
+    TFile *f = new TFile(options["-i"].c_str() + ".root", "update");
     TTree *T = (TTree*)f->Get("tree");
     Double_t b_0_px, b_0_py, b_0_pz, b_0_E;
     Double_t b_1_px, b_1_py, b_1_pz, b_1_E;
