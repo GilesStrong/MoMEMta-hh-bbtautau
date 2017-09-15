@@ -43,20 +43,18 @@ void normalizeInput(LorentzVector& p4) {
  void showHelp() {
     /*Show help for input arguments*/
     std::cout << "-i : input mask\n";
-    std::cout << "-o : output name\n";
     std::cout << "-s : Event number to start on, default 0\n";
     std::cout << "-d : run in debug mode [0/1], default 0\n";
-    std::cout << "-n : Number of events to process, default all\n";
+    std::cout << "-e : Event number to end on, default all\n";
 }
 
  std::map<std::string, std::string> getOptions(int argc, char* argv[]) {
     /*Interpret input arguments*/
     std::map<std::string, std::string> options;
     options.insert(std::make_pair("-i", "/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData.root")); //Input name
-    options.insert(std::make_pair("-o", "/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData_Bkg")); //Output base name
     options.insert(std::make_pair("-d", "0")); //Debug mode
     options.insert(std::make_pair("-s", "0")); //Start number
-    options.insert(std::make_pair("-n", "-1")); //Number ot process
+    options.insert(std::make_pair("-e", "-1")); //End number
     if (argc >= 2) {
         std::string option(argv[1]);
         if (option == "-h" || option == "--help") {
@@ -75,7 +73,7 @@ void normalizeInput(LorentzVector& p4) {
         }
         options[option] = argument;
     }
-    if (options["-i"] == "" || options["-o"] == "") {
+    if (options["-i"] == "") {
         showHelp();
         options.clear();
         return options;
@@ -132,8 +130,8 @@ int main(int argc, char** argv) {
     auto start_time = system_clock::now();
     Long64_t nentries = T->GetEntries();
     LorentzVector v_bjet0, v_bjet1, v_tau0, v_tau1;
-    if (options["-n"] != "-1") {
-        nentries = stringToDouble(options["-s"])+stringToDouble(options["-n"]);
+    if ((options["-e"] != "-1") & (options["-e"] <= nentries)) {
+        nentries = stringToDouble(options["-e"]);
     }
 
     std::vector<std::vector<double> > outputs;
@@ -180,7 +178,7 @@ int main(int argc, char** argv) {
     LOG(info) << "Weights computed in " << std::chrono::duration_cast<milliseconds>(end_time - start_time).count() << "ms";
 
     std::ofstream outFile;
-    outFile.open(options["-o"] + "_" + options["-s"] + ".csv");
+    outFile.open(options["-i"] + "_Bkg_" + options["-s"] + ".csv");
     outFile << ",memSigWeight, memSigWeight_Error\n";
     for (int i = 0; i < outputs.size(); ++i) {
         outFile << outputs[i][0] << "," << outputs[i][1] << "," << outputs[i][2] << "\n";
