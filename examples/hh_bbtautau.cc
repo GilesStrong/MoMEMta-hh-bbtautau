@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
     MoMEMta weight(configuration.freeze());
 
-    TFile *f = new TFile("/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData.root","update");
+    TFile *f = new TFile("/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData.root");
     //TFile *f = new TFile("/home/giles/cernbox/sample_analysis/processedData.root","update");
     TTree *T = (TTree*)f->Get("tree");
     Double_t regB_b_0_px, regB_b_0_py, regB_b_0_pz, regB_b_0_E;
@@ -57,8 +57,6 @@ int main(int argc, char** argv) {
     Double_t regTau_t_0_px, regTau_t_0_py, regTau_t_0_pz, regTau_t_0_E;
     Double_t regTau_t_1_px, regTau_t_1_py, regTau_t_1_pz, regTau_t_1_E;
 
-    Double_t memWeight;
-    TBranch *memSigWeights = T->Branch("memSigWeights",&memWeight,"memWeight/D");
     T->SetBranchAddress("regB_b_0_px",&regB_b_0_px);
     T->SetBranchAddress("regB_b_0_py",&regB_b_0_py);
     T->SetBranchAddress("regB_b_0_pz",&regB_b_0_pz);
@@ -77,21 +75,23 @@ int main(int argc, char** argv) {
     T->SetBranchAddress("regTau_t_1_E",&regTau_t_1_E);
 
     auto start_time = system_clock::now();
-    Long64_t nentries = 10;//T->GetEntries();
+    Long64_t nentries = T->GetEntries();
     LorentzVector v_bjet0, v_bjet1, v_tau0, v_tau1;
     std::vector<std::vector<double> > outputs;
     std::vector<double> buffer(3);
     for (Long64_t i=0;i<nentries;i++) {
         if (i%100 == 0) {
             LOG(info) <<"event: "<<i<<" of "<<nentries<<" ("<<(Double_t)(nentries-i)/(Double_t)nentries*100.0<<"% to go)";
-            LOG(info) << "Latest weight: " << memWeight;
+            LOG(info) << "Latest weight: " << buffer[1];
         }
         T->GetEntry(i);
         v_bjet0 = LorentzVector(regB_b_0_px, regB_b_0_py, regB_b_0_pz, regB_b_0_E);
         v_bjet1 = LorentzVector(regB_b_1_px, regB_b_1_py, regB_b_1_pz, regB_b_1_E);
         v_tau0 = LorentzVector(regTau_t_0_px, regTau_t_0_py, regTau_t_0_pz, regTau_t_0_E);
         v_tau1 = LorentzVector(regTau_t_1_px, regTau_t_1_py, regTau_t_1_pz, regTau_t_1_E);
-        memWeight = -1;
+        buffer[0] = i;
+        buffer[1] = -1;
+        buffer[2] = -1;
         fixMass(v_bjet0, 0);
         fixMass(v_bjet1, 0);
         fixMass(v_tau0, 0);
@@ -103,8 +103,6 @@ int main(int argc, char** argv) {
                 Particle tau0{"tau0", v_tau0, -15};
                 Particle tau1{"tau1", v_tau1, 15};
                 std::vector<std::pair<long double, long double>> weights = weight.computeWeights({bjet0, bjet1, tau0, tau1});
-                memWeight = weights[0].first;
-                buffer[0] = i;
                 buffer[1] = weights[0].first;
                 buffer[2] = weights[1].first;
                 outputs.push_back(buffer);
@@ -121,13 +119,11 @@ int main(int argc, char** argv) {
                 std::cout << "Unphysical event due to mass: " << v_bjet0.M() << " " << v_bjet1.M() << " " << v_tau0.M() << " " << v_tau1.M() << "\n";
                 break;
         }
-        memSigWeights->Fill();
     }
     auto end_time = system_clock::now();
     LOG(info) << "Weights computed in " << std::chrono::duration_cast<milliseconds>(end_time - start_time).count() << "ms";
-    T->Write();
     std::ofstream outFile;
-    outFile.open ("test.csv");
+    outFile.open ("/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData_Sig.csv");
     outFile << ",memSigWeight, memSigWeight_Error\n";
     for (int i = 0; i < outputs.size(); ++i) {
         outFile << outputs[i][0] << "," << outputs[i][1] << "," << outputs[i][2] << "\n";
