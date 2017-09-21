@@ -289,6 +289,11 @@ if(EXAMPLES)
     set_target_properties(example_hh_bbtautau PROPERTIES OUTPUT_NAME
       "hh_bbtautau.exe")
 
+    add_executable(example_hh_bbtautau_UFO "examples/hh_bbtautau_UFO.cc")
+    target_link_libraries(example_hh_bbtautau_UFO momemta)
+    set_target_properties(example_hh_bbtautau_UFO PROPERTIES OUTPUT_NAME
+      "hh_bbtautau_UFO.exe")
+
     add_executable(example_ttbar_mu_tau "examples/ttbar_mu_tau.cc")
     target_link_libraries(example_ttbar_mu_tau momemta)
     set_target_properties(example_ttbar_mu_tau PROPERTIES OUTPUT_NAME
