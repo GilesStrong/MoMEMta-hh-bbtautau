@@ -51,7 +51,7 @@ void normalizeInput(LorentzVector& p4) {
  std::map<std::string, std::string> getOptions(int argc, char* argv[]) {
     /*Interpret input arguments*/
     std::map<std::string, std::string> options;
-    options.insert(std::make_pair("-i", "/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_MCData")); //Input name
+    options.insert(std::make_pair("-i", "/home/giles/cernbox/CMS_HH_bbtautau_MVA/Data/mu_tau_b_b_fullData")); //Input name
     options.insert(std::make_pair("-d", "0")); //Debug mode
     options.insert(std::make_pair("-s", "0")); //Start number
     options.insert(std::make_pair("-e", "-1")); //End number
