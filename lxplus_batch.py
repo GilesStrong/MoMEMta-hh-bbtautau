@@ -26,7 +26,7 @@ def makeJOFile(start, stop, inputFile, queue):
 
 if __name__ == "__main__":
     parser = optparse.OptionParser(usage = __doc__)
-    parser.add_option("-i", "--input", dest = "input", action = "append", default = ["mu_tau_b_b_fullData"], help = "Input file")
+    parser.add_option("-i", "--input", dest = "input", action = "append", default = ["mu_tau_b_b_MCData"], help = "Input file")
     parser.add_option("-n", "--nEvents", dest = "nEvents", action = "append", default = [198489], help = "Number of events")
     parser.add_option("-a", "--first", dest = "first", action = "append", default = [0], help = "First event numbers")
     parser.add_option("-s", "--split", dest = "split", action = "append", default = [280], help = "Number of events per split")
