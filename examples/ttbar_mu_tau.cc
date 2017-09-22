@@ -166,11 +166,11 @@ int main(int argc, char** argv) {
                 if (weights.size() > 1) std::cout << "Number of solutions: " << weights.size() << "\n";
             } else {
                 std::cout << "Unphysical event due to momentum: " << v_bjet0.P() << " " << v_bjet1.P() << " " << v_tau0.P() << " " << v_tau1.P() << "\n";
-                break;
+                buffer[1] = -2;
             }
         } else {
                 std::cout << "Unphysical event due to mass: " << v_bjet0.M() << " " << v_bjet1.M() << " " << v_tau0.M() << " " << v_tau1.M() << "\n";
-                break;
+                buffer[1] = -3;
         }
         outputs.push_back(buffer);
     }
