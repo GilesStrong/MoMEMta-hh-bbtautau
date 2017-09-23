@@ -131,9 +131,11 @@ int main(int argc, char** argv) {
     Long64_t nentries = T->GetEntries();
     LorentzVector v_bjet0, v_bjet1, v_tau0, v_tau1;
     if ((options["-e"] != "-1") & (options["-e"] <= nentries)) {
+        std::cout << options["-e"] != "-1" << "\n";
+        std::cout << "Editting stop point\n";
         nentries = stringToDouble(options["-e"]);
     }
-
+    std::cout << "Stop Point: " << nentries << "\n";
     std::vector<std::vector<double> > outputs;
     std::vector<double> buffer(3);
 
