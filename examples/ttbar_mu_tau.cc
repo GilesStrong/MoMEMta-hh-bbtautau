@@ -130,8 +130,9 @@ int main(int argc, char** argv) {
     auto start_time = system_clock::now();
     Long64_t nentries = T->GetEntries();
     LorentzVector v_bjet0, v_bjet1, v_tau0, v_tau1;
+    std::cout << options["-e"] << "\n";
     if ((options["-e"] != "-1") & (options["-e"] <= nentries)) {
-        std::cout << options["-e"] << "\n";
+
         std::cout << "Editting stop point\n";
         nentries = stringToDouble(options["-e"]);
     }
